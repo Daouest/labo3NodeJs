@@ -13,7 +13,7 @@ import CachedRequestsManager from "./CachedRequestsManager.js";
 let api_server_version = serverVariables.get("main.api_server_version");
 
 export default class APIServer {
-    constructor(port = process.env.PORT || 5000) {
+    constructor(port = process.env.PORT || 8000) {
         this.port = port;
         this.initMiddlewaresPipeline();
         this.httpContext = null;
@@ -85,17 +85,11 @@ export default class APIServer {
 
     cacheMiddleware = async (httpContext) => {
         console.log("Checking cache for request:", httpContext.req.url);
-
-        // Check if the request URL is cached
         const isCached = CachedRequestsManager.get(httpContext);
-
         if (isCached) {
-            // If cached, response has already been sent, so no further middleware needed
             console.log("Request served from cache.");
-            return true; // Stop further middleware execution
+            return true;
         }
-
-        // If not cached, continue to the next middleware
         return false;
     };
 }
