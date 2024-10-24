@@ -84,9 +84,8 @@ export default class APIServer {
     }
 
     cacheMiddleware = async (httpContext) => {
-        console.log("Checking cache for request:", httpContext.req.url);
-        const isCached = CachedRequestsManager.get(httpContext);
-        if (isCached) {
+        console.log(`Checking cache for request: ${httpContext.req.url}`);
+        if (CachedRequestsManager.get(httpContext)) {
             console.log("Request served from cache.");
             return true;
         }
