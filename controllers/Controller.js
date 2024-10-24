@@ -1,4 +1,3 @@
-import CachedRequestsManager from "../CachedRequestsManager.js";
 
 export default class Controller {
     constructor(HttpContext, repository = null) {
@@ -12,7 +11,6 @@ export default class Controller {
             this.HttpContext.response.notImplemented();
     }
     get(id) {
-        //CachedRequestsManager.get(this.HttpContext);
         if (this.repository != null) {
             if (id !== undefined) {
                 if (!isNaN(id)) {
@@ -38,7 +36,6 @@ export default class Controller {
     post(data) {
         data = this.repository.add(data);
         if (this.repository.model.state.isValid) {
-            CachedRequestsManager.add(this.HttpContext.url, data, this.repository.ETag);
             this.HttpContext.response.created(data);
         } else {
             if (this.repository.model.state.inConflict)
@@ -51,7 +48,6 @@ export default class Controller {
         if (!isNaN(this.HttpContext.path.id)) {
             this.repository.update(this.HttpContext.path.id, data);
             if (this.repository.model.state.isValid) {
-                CachedRequestsManager.add(this.HttpContext.url, data, this.repository.ETag);
                 this.HttpContext.response.ok();
             } else {
                 if (this.repository.model.state.notFound) {
@@ -69,7 +65,6 @@ export default class Controller {
     remove(id) {
         if (!isNaN(this.HttpContext.path.id)) {
             if (this.repository.remove(id)) {
-                CachedRequestsManager.clear(this.HttpContext.url);
                 this.HttpContext.response.accepted();
             }
             else
